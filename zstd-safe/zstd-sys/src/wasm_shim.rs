@@ -1,5 +1,5 @@
-use std::alloc::{alloc, dealloc, Layout};
-use std::os::raw::{c_int, c_void};
+use core::alloc::{alloc, dealloc, Layout};
+use core::os::raw::{c_int, c_void};
 
 #[no_mangle]
 pub extern "C" fn rust_zstd_wasm_shim_malloc(size: usize) -> *mut c_void {
@@ -33,7 +33,7 @@ pub unsafe extern "C" fn rust_zstd_wasm_shim_memcpy(
     src: *const c_void,
     n: usize,
 ) -> *mut c_void {
-    std::ptr::copy_nonoverlapping(src as *const u8, dest as *mut u8, n);
+    core::ptr::copy_nonoverlapping(src as *const u8, dest as *mut u8, n);
     dest
 }
 
@@ -43,7 +43,7 @@ pub unsafe extern "C" fn rust_zstd_wasm_shim_memmove(
     src: *const c_void,
     n: usize,
 ) -> *mut c_void {
-    std::ptr::copy(src as *const u8, dest as *mut u8, n);
+    core::ptr::copy(src as *const u8, dest as *mut u8, n);
     dest
 }
 
@@ -53,6 +53,6 @@ pub unsafe extern "C" fn rust_zstd_wasm_shim_memset(
     c: c_int,
     n: usize,
 ) -> *mut c_void {
-    std::ptr::write_bytes(dest as *mut u8, c as u8, n);
+    core::ptr::write_bytes(dest as *mut u8, c as u8, n);
     dest
 }
