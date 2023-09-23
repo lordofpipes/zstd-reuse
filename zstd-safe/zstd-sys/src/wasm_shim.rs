@@ -1,5 +1,7 @@
-use core::alloc::{alloc, dealloc, Layout};
-use core::os::raw::{c_int, c_void};
+extern crate alloc;
+
+use alloc::alloc::{alloc, dealloc, Layout};
+use core::ffi::{c_int, c_void};
 
 #[no_mangle]
 pub extern "C" fn rust_zstd_wasm_shim_malloc(size: usize) -> *mut c_void {
