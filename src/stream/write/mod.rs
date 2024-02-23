@@ -330,6 +330,19 @@ impl<W: Write> Decoder<'static, W> {
 }
 
 impl<'a, W: Write> Decoder<'a, W> {
+    /// Creates an encoder that uses the provided context to compress a stream.
+    pub fn with_context<'b: 'a>(
+        writer: W,
+        context: &'a mut zstd_safe::DCtx<'b>,
+    ) -> Self {
+        Self {
+            writer: zio::Writer::new(
+                writer,
+                raw::Decoder::with_context(context),
+            ),
+        }
+    }
+
     /// Creates a new decoder, using an existing prepared `DecoderDictionary`.
     ///
     /// (Provides better compression ratio for small files,

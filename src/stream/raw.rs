@@ -150,14 +150,18 @@ impl Decoder<'static> {
         context
             .load_dictionary(dictionary)
             .map_err(map_error_code)?;
-        Ok(Decoder { context: MaybeOwned::owned(context) })
+        Ok(Decoder {
+            context: MaybeOwned::owned(context),
+        })
     }
 }
 
 impl<'a> Decoder<'a> {
     /// Creates a new decoder which employs the provided context for deserialization.
     pub fn with_context<'b: 'a>(context: &'a mut zstd_safe::DCtx<'b>) -> Self {
-        Self { context: MaybeOwned::borrowed(context) }
+        Self {
+            context: MaybeOwned::borrowed(context),
+        }
     }
 
     /// Creates a new decoder, using an existing `DecoderDictionary`.
@@ -171,7 +175,9 @@ impl<'a> Decoder<'a> {
         context
             .ref_ddict(dictionary.as_ddict())
             .map_err(map_error_code)?;
-        Ok(Decoder { context: MaybeOwned::owned(context) })
+        Ok(Decoder {
+            context: MaybeOwned::owned(context),
+        })
     }
 
     /// Sets a decompression parameter for this decoder.
@@ -257,14 +263,18 @@ impl Encoder<'static> {
             .load_dictionary(dictionary)
             .map_err(map_error_code)?;
 
-        Ok(Encoder { context: MaybeOwned::owned(context) })
+        Ok(Encoder {
+            context: MaybeOwned::owned(context),
+        })
     }
 }
 
 impl<'a> Encoder<'a> {
     /// Creates a new encoder that uses the provided context for serialization.
     pub fn with_context<'b: 'a>(context: &'a mut zstd_safe::CCtx<'b>) -> Self {
-        Self { context: MaybeOwned::borrowed(context) }
+        Self {
+            context: MaybeOwned::borrowed(context),
+        }
     }
 
     /// Creates a new encoder using an existing `EncoderDictionary`.
@@ -278,7 +288,9 @@ impl<'a> Encoder<'a> {
         context
             .ref_cdict(dictionary.as_cdict())
             .map_err(map_error_code)?;
-        Ok(Encoder { context: MaybeOwned::owned(context) })
+        Ok(Encoder {
+            context: MaybeOwned::owned(context),
+        })
     }
 
     /// Sets a compression parameter for this encoder.
@@ -350,7 +362,10 @@ impl<'a, T> MaybeOwned<'a, T> {
     }
 
     pub fn borrowed(value: &'a mut T) -> Self {
-        Self(MaybeOwnedInner::Borrowed((value as *mut T) as *mut _, PhantomData))
+        Self(MaybeOwnedInner::Borrowed(
+            (value as *mut T) as *mut _,
+            PhantomData,
+        ))
     }
 }
 
@@ -361,7 +376,7 @@ impl<'a, T> Deref for MaybeOwned<'a, T> {
         unsafe {
             match &self.0 {
                 MaybeOwnedInner::Owned(x) => x,
-                MaybeOwnedInner::Borrowed(x, _) => &*(*x as *mut _)
+                MaybeOwnedInner::Borrowed(x, _) => &*(*x as *mut _),
             }
         }
     }
@@ -372,7 +387,7 @@ impl<'a, T> DerefMut for MaybeOwned<'a, T> {
         unsafe {
             match &mut self.0 {
                 MaybeOwnedInner::Owned(x) => x,
-                MaybeOwnedInner::Borrowed(x, _) => &mut *(*x as *mut _)
+                MaybeOwnedInner::Borrowed(x, _) => &mut *(*x as *mut _),
             }
         }
     }
@@ -380,7 +395,7 @@ impl<'a, T> DerefMut for MaybeOwned<'a, T> {
 
 enum MaybeOwnedInner<'a, T> {
     Owned(T),
-    Borrowed(*mut (), PhantomData<&'a ()>)
+    Borrowed(*mut (), PhantomData<&'a ()>),
 }
 
 unsafe impl<'a, T: Send> Send for MaybeOwned<'a, T> {}
