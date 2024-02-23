@@ -3,7 +3,6 @@ use std::io::{self, BufRead, BufReader, Read};
 
 use crate::dict::{DecoderDictionary, EncoderDictionary};
 use crate::stream::{raw, zio};
-use zstd_safe;
 
 #[cfg(test)]
 mod tests;
@@ -47,8 +46,16 @@ impl<R: BufRead> Decoder<'static, R> {
 }
 impl<'a, R: BufRead> Decoder<'a, R> {
     /// Creates a new decoder which employs the provided context for deserialization.
-    pub fn with_context<'b: 'a>(reader: R, context: &'a mut zstd_safe::DCtx<'b>) -> Self {
-        Self { reader: zio::Reader::new(reader, raw::Decoder::with_context(context)) }
+    pub fn with_context<'b: 'a>(
+        reader: R,
+        context: &'a mut zstd_safe::DCtx<'b>,
+    ) -> Self {
+        Self {
+            reader: zio::Reader::new(
+                reader,
+                raw::Decoder::with_context(context),
+            ),
+        }
     }
 
     /// Sets this `Decoder` to stop after the first frame.

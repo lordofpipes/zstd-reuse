@@ -1,8 +1,6 @@
 //! Implement push-based [`Write`] trait for both compressing and decompressing.
 use std::io::{self, Write};
 
-use zstd_safe;
-
 use crate::dict::{DecoderDictionary, EncoderDictionary};
 use crate::stream::{raw, zio};
 
@@ -194,8 +192,16 @@ impl<W: Write> Encoder<'static, W> {
 
 impl<'a, W: Write> Encoder<'a, W> {
     /// Creates an encoder that uses the provided context to compress a stream.
-    pub fn with_context<'b: 'a>(writer: W, context: &'a mut zstd_safe::CCtx<'b>) -> Self {
-        Self { writer: zio::Writer::new(writer, raw::Encoder::with_context(context)) }
+    pub fn with_context<'b: 'a>(
+        writer: W,
+        context: &'a mut zstd_safe::CCtx<'b>,
+    ) -> Self {
+        Self {
+            writer: zio::Writer::new(
+                writer,
+                raw::Encoder::with_context(context),
+            ),
+        }
     }
 
     /// Creates a new encoder, using an existing prepared `EncoderDictionary`.

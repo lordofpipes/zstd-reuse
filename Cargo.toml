@@ -1,13 +1,13 @@
 [package]
-authors = ["Alexandre Bury <alexandre.bury@gmail.com>"]
-description = "Binding for the zstd compression library."
-documentation = "https://docs.rs/zstd"
+authors = ["lordpipe <lordpipe@protonmail.com>", "Douglas Dwyer <dougmdwyer@hotmail.com>", "Alexandre Bury <alexandre.bury@gmail.com>"]
+description = "Binding for the zstd compression library, with the ability to reuse compression contexts."
+documentation = "https://docs.rs/zstd-reusectx"
 keywords = ["zstd", "zstandard", "compression"]
 categories = ["compression", "api-bindings"]
 license = "MIT"
-name = "zstd"
-repository = "https://github.com/gyscos/zstd-rs"
-version = "0.13.0"
+name = "zstd-reusectx"
+repository = "https://github.com/lordofpipes/zstd-rs"
+version = "0.14.0"
 exclude = ["assets/*.zst", "/.github"]
 readme = "Readme.md"
 edition = "2018"
@@ -15,9 +15,6 @@ rust-version = "1.64"
 
 [package.metadata.docs.rs]
 features = ["experimental", "zstdmt", "zdict_builder", "doc-cfg"]
-
-[badges]
-travis-ci = { repository = "gyscos/zstd-rs" }
 
 [dependencies]
 zstd-safe = { path = "zstd-safe", version = "7.0.0", default-features = false, features = ["std"] }
@@ -48,6 +45,9 @@ zdict_builder = ["zstd-safe/zdict_builder"]
 # Will only work if `clang` is used to build the C library.
 fat-lto = ["zstd-safe/fat-lto"]
 thin-lto = ["zstd-safe/thin-lto"]
+
+[lib]
+name = "zstd"
 
 [[example]]
 name = "train"

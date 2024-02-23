@@ -1,7 +1,6 @@
 use crate::map_error_code;
 
 use std::io;
-use zstd_safe;
 
 /// Allows to compress independently multiple chunks of data.
 ///

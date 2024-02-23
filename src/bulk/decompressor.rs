@@ -3,7 +3,6 @@ use crate::map_error_code;
 #[cfg(feature = "experimental")]
 use std::convert::TryInto;
 use std::io;
-use zstd_safe;
 
 /// Allows to decompress independently multiple blocks of data.
 ///
